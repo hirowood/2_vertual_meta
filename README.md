@@ -1,203 +1,168 @@
-# バーチャルスクールプラットフォーム
+# Virtual School Platform
 
-インクルーシブな仮想学習環境を提供するWebアプリケーション
+インクルーシブな仮想学校プラットフォーム - MVP版
+
+## 🎯 プロジェクト概要
+
+障害や体調などで外に出られない人が、まるで外に出ているかのように学習・交流・就労できるプラットフォームです。
+
+### 主要機能（MVP）
+- ✅ ユーザー認証（JWT）
+- ✅ 基本的なダッシュボード
+- ✅ Socket.io接続
+- 🚧 2D空間移動（Phaser.js）
+- 🚧 リアルタイムチャット
+- 🚧 プロフィール管理
 
 ## 🚀 クイックスタート
 
-### 自動セットアップ（Windows）
+### 必要な環境
+- Node.js 18.0.0以上
+- npm 9.0.0以上
 
-```batch
-# プロジェクトをダウンロード後、以下を実行
-setup.bat
-```
+### セットアップ手順
 
-### 開発サーバーの起動
-
-```batch
-# 両方のサーバーを同時に起動
-start-dev.bat
-```
-
-または手動で：
-
+1. **バックエンドのセットアップ**
 ```bash
-# Terminal 1 - バックエンド
+# バックエンドの依存関係をインストール
+./install-backend.bat
+
+# データベースの初期化
 cd backend
-npm run dev
-
-# Terminal 2 - フロントエンド
-cd frontend
-npm run dev
+npm run db:push
+npm run db:generate
 ```
 
-## 📁 プロジェクト構成
+2. **フロントエンドのセットアップ**
+```bash
+# フロントエンドの依存関係をインストール
+./install-frontend.bat
+```
+
+3. **開発サーバーの起動**
+```bash
+# 両方のサーバーを同時に起動
+./start-all.bat
+
+# または個別に起動
+# バックエンド
+cd backend && npm run dev
+
+# フロントエンド
+cd frontend && npm run dev
+```
+
+### アクセスURL
+- フロントエンド: http://localhost:3000
+- バックエンドAPI: http://localhost:5000
+- Prisma Studio: http://localhost:5555
+
+## 📁 プロジェクト構造
 
 ```
-2_vertual_meta/
-├── backend/               # Express バックエンド
+/
+├── backend/          # Express + TypeScript バックエンド
 │   ├── src/
-│   │   ├── config/       # 設定
-│   │   ├── controllers/  # コントローラー（HTTPリクエスト処理）
+│   │   ├── config/   # 設定ファイル
+│   │   ├── controllers/  # コントローラー
 │   │   ├── middleware/   # ミドルウェア
 │   │   ├── routes/       # APIルート
 │   │   ├── services/     # ビジネスロジック
-│   │   ├── socket/       # Socket.ioハンドラー
-│   │   ├── types/        # 型定義
-│   │   ├── utils/        # ユーティリティ
-│   │   ├── validators/   # バリデーション
-│   │   └── server.ts     # エントリーポイント
-│   └── prisma/
-│       └── schema.prisma # データベーススキーマ
+│   │   ├── types/        # TypeScript型定義
+│   │   └── utils/        # ユーティリティ
+│   ├── prisma/       # Prismaスキーマ
+│   └── .env          # 環境変数
 │
-├── frontend/             # Next.js フロントエンド
-│   └── src/
-│       ├── components/   # UIコンポーネント
-│       ├── hooks/        # カスタムフック
-│       ├── lib/          # ライブラリ設定
-│       ├── pages/        # ページコンポーネント
-│       ├── stores/       # 状態管理（Zustand）
-│       ├── styles/       # スタイル
-│       └── types/        # 型定義
-│
-├── setup.bat            # 自動セットアップスクリプト
-├── start-dev.bat        # 開発サーバー起動スクリプト
-└── README.md
+└── frontend/         # Next.js 14 フロントエンド
+    ├── src/
+    │   ├── app/          # Next.js App Router
+    │   ├── components/   # Reactコンポーネント
+    │   ├── lib/          # ライブラリ・ユーティリティ
+    │   ├── stores/       # Zustand状態管理
+    │   └── types/        # TypeScript型定義
+    └── .env.local        # 環境変数
 ```
 
-## 🛠 技術スタック
-
-### バックエンド
-- **Express.js** - Webフレームワーク
-- **TypeScript** - 型安全な開発
-- **Prisma** - ORM
-- **Socket.io** - リアルタイム通信
-- **JWT** - 認証
-- **SQLite/PostgreSQL** - データベース
+## 🔧 技術スタック
 
 ### フロントエンド
-- **Next.js 14** - Reactフレームワーク
-- **TypeScript** - 型安全な開発
-- **Phaser.js** - 2Dゲームエンジン
-- **Tailwind CSS** - スタイリング
-- **Zustand** - 状態管理
-- **Socket.io-client** - リアルタイム通信
+- Next.js 14 (App Router)
+- TypeScript
+- Tailwind CSS
+- Zustand (状態管理)
+- Socket.io-client
+- Phaser.js (2D空間)
+- React Hook Form + Zod
 
-## ✨ 主要機能（MVP）
-
-- 🔐 **ユーザー認証** - JWT認証、ロールベースアクセス制御
-- 🎮 **2D空間移動** - Phaser.jsによるアバター移動
-- 💬 **リアルタイムチャット** - Socket.ioによる即時メッセージング
-- 🏫 **ルーム機能** - 公開/プライベートルームの作成・参加
-- 👤 **プロフィール管理** - ユーザー情報の編集
-
-## 🔧 手動セットアップ
-
-### 必要要件
-- Node.js 18.0以上
-- npm または yarn
-
-### 1. リポジトリのクローン
-```bash
-git clone [repository-url]
-cd 2_vertual_meta
-```
-
-### 2. バックエンドセットアップ
-```bash
-cd backend
-npm install
-npm run db:generate
-npm run db:push
-npm run dev
-```
-
-### 3. フロントエンドセットアップ
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-### 4. アクセス
-- フロントエンド: http://localhost:3000
-- バックエンドAPI: http://localhost:5000/api
+### バックエンド
+- Express
+- TypeScript
+- Prisma ORM
+- SQLite (開発) / PostgreSQL (本番)
+- Socket.io
+- JWT認証
+- bcrypt
 
 ## 🔑 環境変数
 
-### バックエンド（`backend/.env`）
+### Backend (.env)
 ```env
+NODE_ENV=development
 PORT=5000
 DATABASE_URL="file:./dev.db"
-JWT_SECRET=your-jwt-secret-change-in-production
+JWT_SECRET=your-secret-key
 JWT_EXPIRE=7d
+JWT_REFRESH_SECRET=your-refresh-secret
+JWT_REFRESH_EXPIRE=30d
 FRONTEND_URL=http://localhost:3000
 ```
 
-### フロントエンド（`frontend/.env.local`）
+### Frontend (.env.local)
 ```env
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
-NEXT_PUBLIC_SOCKET_URL=http://localhost:5000
+NEXT_PUBLIC_API_URL=http://localhost:5000
+NEXT_PUBLIC_WS_URL=http://localhost:5000
+NEXT_PUBLIC_APP_NAME=Virtual School Platform
 ```
 
-## 📚 API ドキュメント
+## 📝 開発メモ
 
-### 認証
-- `POST /api/auth/register` - ユーザー登録
-- `POST /api/auth/login` - ログイン
-- `POST /api/auth/logout` - ログアウト
+### 現在の実装状況
+- ✅ バックエンドAPI構造
+- ✅ 認証システム（JWT）
+- ✅ フロントエンド基本構造
+- ✅ ログイン/登録フォーム
+- ✅ ダッシュボード画面
+- ✅ Socket.io接続
 
-### ユーザー
-- `GET /api/users` - ユーザー一覧
-- `PUT /api/users/profile` - プロフィール更新
-- `PUT /api/users/position` - 位置情報更新
-
-### ルーム
-- `GET /api/rooms` - ルーム一覧
-- `POST /api/rooms` - ルーム作成
-- `POST /api/rooms/:id/join` - ルーム参加
-
-## 🎯 今後の実装予定
-
-### Phase 1
-- [ ] 近接音声通話（WebRTC）
-- [ ] 日報・体調記録
-- [ ] 出席管理システム
-
-### Phase 2
-- [ ] 学習支援機能
-- [ ] イベントシステム
-- [ ] ゲーミフィケーション要素
-
-## 📝 ライセンス
-
-MIT License
-
-## 🤝 貢献
-
-プルリクエストを歓迎します。大きな変更の場合は、まずissueを開いて議論してください。
+### 次の実装予定
+- [ ] Phaser.jsによる2D空間
+- [ ] リアルタイムチャット機能
+- [ ] ユーザープロフィール編集
+- [ ] ルーム管理機能
 
 ## 🐛 トラブルシューティング
 
-### npm installでエラーが出る場合
-```bash
-# キャッシュをクリア
-npm cache clean --force
-# 再インストール
-npm install
-```
+### よくある問題と解決方法
 
-### データベースエラーが出る場合
-```bash
-cd backend
-# データベースをリセット
-rm prisma/dev.db
-npm run db:push
-```
+1. **JWTエラーが発生する**
+   - `auth.utils.ts`のexpiresInの型エラーは修正済み
 
-### ポートが既に使用されている場合
-- バックエンドポート（5000）を変更: `backend/.env`のPORTを編集
-- フロントエンドポート（3000）を変更: `frontend/package.json`のdevスクリプトを編集
+2. **フロントエンドが起動しない**
+   - `npm install`を再実行
+   - `.next`フォルダを削除して再ビルド
 
-## 📞 サポート
+3. **Socket.ioが接続できない**
+   - バックエンドが起動していることを確認
+   - CORSの設定を確認
 
-問題が発生した場合は、GitHubのIssuesで報告してください。
+## 📄 ライセンス
+
+MIT
+
+## 👥 コントリビューション
+
+プルリクエストを歓迎します！
+
+---
+
+**開発中のプロジェクトです。機能は段階的に追加されていきます。**

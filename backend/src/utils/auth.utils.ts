@@ -20,14 +20,14 @@ export const comparePassword = async (
 // アクセストークンの生成
 export const generateAccessToken = (payload: JwtPayload): string => {
   return jwt.sign(payload, config.jwt.secret, {
-    expiresIn: config.jwt.expiresIn,
+    expiresIn: config.jwt.expiresIn as string | number,
   });
 };
 
 // リフレッシュトークンの生成
 export const generateRefreshToken = (payload: RefreshTokenPayload): string => {
   return jwt.sign(payload, config.jwt.refreshSecret, {
-    expiresIn: config.jwt.refreshExpiresIn,
+    expiresIn: config.jwt.refreshExpiresIn as string | number,
   });
 };
 
