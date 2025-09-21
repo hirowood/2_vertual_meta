@@ -1,0 +1,200 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ユーザーモデル
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  name          String
+  avatar        String?
+  role          Role      @default(STUDENT)
+  isActive      Boolean   @default(true)
+  lastLoginAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  profile       Profile?
+  messages      ChatMessage[]
+  position      UserPosition?
+  reports       DailyReport[]
+  attendance    Attendance[]
+  sessions      Session[]
+  refreshTokens RefreshToken[]
+  roomMembers   RoomMember[]
+  createdRooms  Room[]         @relation("RoomCreator")
+}
+
+// セッション管理
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// リフレッシュトークン
+model RefreshToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// プロフィール
+model Profile {
+  id            String    @id @default(cuid())
+  userId        String    @unique
+  bio           String?
+  status        String?
+  interests     String?
+  grade         String?    // 学年
+  subjects      String?    // 担当科目（教師用）
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// チャットメッセージ
+model ChatMessage {
+  id            String    @id @default(cuid())
+  userId        String
+  roomId        String?
+  content       String
+  type          MessageType @default(TEXT)
+  isEdited      Boolean   @default(false)
+  editedAt      DateTime?
+  createdAt     DateTime  @default(now())
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room          Room?     @relation(fields: [roomId], references: [id], onDelete: SetNull)
+}
+
+// ユーザー位置情報
+model UserPosition {
+  id            String    @id @default(cuid())
+  userId        String    @unique
+  x             Float
+  y             Float
+  mapId         String    @default("main")
+  direction     String    @default("down")
+  isMoving      Boolean   @default(false)
+  updatedAt     DateTime  @updatedAt
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ルーム
+model Room {
+  id            String    @id @default(cuid())
+  name          String
+  description   String?
+  type          RoomType  @default(PUBLIC)
+  capacity      Int       @default(10)
+  password      String?   // プライベートルーム用
+  isActive      Boolean   @default(true)
+  createdBy     String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  creator       User      @relation("RoomCreator", fields: [createdBy], references: [id])
+  messages      ChatMessage[]
+  members       RoomMember[]
+}
+
+// ルームメンバー
+model RoomMember {
+  id            String    @id @default(cuid())
+  roomId        String
+  userId        String
+  role          RoomRole  @default(MEMBER)
+  joinedAt      DateTime  @default(now())
+  
+  room          Room      @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([roomId, userId])
+}
+
+// 日報
+model DailyReport {
+  id            String    @id @default(cuid())
+  userId        String
+  date          DateTime  @db.Date
+  mood          Int       // 1-5の気分スコア
+  activities    String?   // 今日の活動
+  achievements  String?   // 達成したこと
+  challenges    String?   // 困ったこと
+  reflection    String?   // 振り返り
+  tomorrowPlan  String?   // 明日の予定
+  isPrivate     Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, date])
+}
+
+// 出席記録
+model Attendance {
+  id            String    @id @default(cuid())
+  userId        String
+  date          DateTime  @db.Date
+  checkInTime   DateTime
+  checkOutTime  DateTime?
+  status        AttendanceStatus @default(PRESENT)
+  note          String?   // 備考
+  
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+}
+
+// Enums
+enum Role {
+  STUDENT
+  TEACHER
+  ADMIN
+}
+
+enum RoomType {
+  PUBLIC
+  PRIVATE
+  LESSON
+  EVENT
+}
+
+enum RoomRole {
+  OWNER
+  MODERATOR
+  MEMBER
+}
+
+enum MessageType {
+  TEXT
+  SYSTEM
+  ANNOUNCEMENT
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  EXCUSED
+  HOLIDAY
+}
