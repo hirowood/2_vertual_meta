@@ -1,64 +1,56 @@
 @echo off
-echo ========================================
-echo Virtual School Platform Setup
-echo ========================================
+echo ====================================
+echo バーチャルスクール - 初期セットアップ
+echo ====================================
 echo.
 
-REM Check Node.js
-node -v >nul 2>&1
-if %errorlevel% neq 0 (
-    echo [ERROR] Node.js is not installed.
-    echo Please install Node.js from https://nodejs.org/
-    pause
-    exit /b 1
-)
-
-echo [1/4] Installing backend dependencies...
-cd /d "%~dp0backend"
+:: バックエンドの依存関係をインストール
+echo [1/4] バックエンドの依存関係をインストールしています...
+cd backend
 call npm install
 if %errorlevel% neq 0 (
-    echo [ERROR] Failed to install backend dependencies
+    echo バックエンドのインストールに失敗しました
     pause
     exit /b 1
 )
 
-echo.
-echo [2/4] Setting up database...
+:: Prismaのセットアップ
+echo [2/4] データベースを設定しています...
 call npx prisma generate
 call npx prisma db push
 if %errorlevel% neq 0 (
-    echo [ERROR] Failed to setup database
+    echo データベースの設定に失敗しました
     pause
     exit /b 1
 )
 
-echo.
-echo [3/4] Installing frontend dependencies...
-cd /d "%~dp0frontend"
+:: フロントエンドの依存関係をインストール
+echo [3/4] フロントエンドの依存関係をインストールしています...
+cd ..\frontend
 call npm install
 if %errorlevel% neq 0 (
-    echo [ERROR] Failed to install frontend dependencies
+    echo フロントエンドのインストールに失敗しました
     pause
     exit /b 1
 )
 
+:: 追加パッケージのインストール
+echo [4/4] 追加パッケージをインストールしています...
+call npm install clsx tailwind-merge
+if %errorlevel% neq 0 (
+    echo 追加パッケージのインストールに失敗しました
+    pause
+    exit /b 1
+)
+
+cd ..
+
 echo.
-echo ========================================
-echo Installation Complete!
-echo ========================================
+echo ====================================
+echo セットアップ完了！
+echo ====================================
 echo.
-echo To run the application:
+echo 次のコマンドで開発サーバーを起動できます:
+echo   start-dev.bat
 echo.
-echo 1. Start the backend server:
-echo    cd backend
-echo    npm run dev
-echo.
-echo 2. In a new terminal, start the frontend:
-echo    cd frontend
-echo    npm run dev
-echo.
-echo 3. Access the application at:
-echo    http://localhost:3000
-echo.
-echo ========================================
 pause

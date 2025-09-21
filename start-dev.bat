@@ -1,21 +1,29 @@
 @echo off
-echo Starting Backend Server...
-cd /d "%~dp0backend"
-start "Backend Server" cmd /k "npm run dev"
+echo ====================================
+echo バーチャルスクール開発サーバー起動
+echo ====================================
+echo.
 
-timeout /t 5 /nobreak > nul
+:: バックエンドを起動
+echo [1/2] バックエンドサーバーを起動しています...
+cd backend
+start cmd /k "npm run dev"
+timeout /t 3 >nul
 
-echo Starting Frontend Server...
-cd /d "%~dp0frontend"
-start "Frontend Server" cmd /k "npm run dev"
+:: フロントエンドを起動
+echo [2/2] フロントエンドサーバーを起動しています...
+cd ..\frontend
+start cmd /k "npm run dev"
+timeout /t 3 >nul
 
 echo.
-echo ========================================
-echo Servers are starting...
-echo ========================================
+echo ====================================
+echo 起動完了！
+echo ====================================
 echo.
-echo Backend:  http://localhost:5000
-echo Frontend: http://localhost:3000
+echo フロントエンド: http://localhost:3000
+echo バックエンド: http://localhost:5000
 echo.
-echo Press any key to close this window...
-pause > nul
+echo 終了するには各ウィンドウでCtrl+Cを押してください
+echo.
+pause
