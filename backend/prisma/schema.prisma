@@ -14,7 +14,7 @@ model User {
   password      String
   name          String
   avatar        String?
-  role          Role      @default(STUDENT)
+  role          String    @default("STUDENT") // Enum -> String
   isActive      Boolean   @default(true)
   lastLoginAt   DateTime?
   createdAt     DateTime  @default(now())
@@ -75,7 +75,7 @@ model ChatMessage {
   userId        String
   roomId        String?
   content       String
-  type          MessageType @default(TEXT)
+  type          String    @default("TEXT") // Enum -> String
   isEdited      Boolean   @default(false)
   editedAt      DateTime?
   createdAt     DateTime  @default(now())
@@ -103,7 +103,7 @@ model Room {
   id            String    @id @default(cuid())
   name          String
   description   String?
-  type          RoomType  @default(PUBLIC)
+  type          String    @default("PUBLIC") // Enum -> String
   capacity      Int       @default(10)
   password      String?   // プライベートルーム用
   isActive      Boolean   @default(true)
@@ -121,7 +121,7 @@ model RoomMember {
   id            String    @id @default(cuid())
   roomId        String
   userId        String
-  role          RoomRole  @default(MEMBER)
+  role          String    @default("MEMBER") // Enum -> String
   joinedAt      DateTime  @default(now())
   
   room          Room      @relation(fields: [roomId], references: [id], onDelete: Cascade)
@@ -134,7 +134,7 @@ model RoomMember {
 model DailyReport {
   id            String    @id @default(cuid())
   userId        String
-  date          DateTime  @db.Date
+  date          DateTime  // @db.Date removed for SQLite
   mood          Int       // 1-5の気分スコア
   activities    String?   // 今日の活動
   achievements  String?   // 達成したこと
@@ -154,47 +154,13 @@ model DailyReport {
 model Attendance {
   id            String    @id @default(cuid())
   userId        String
-  date          DateTime  @db.Date
+  date          DateTime  // @db.Date removed for SQLite
   checkInTime   DateTime
   checkOutTime  DateTime?
-  status        AttendanceStatus @default(PRESENT)
+  status        String    @default("PRESENT") // Enum -> String
   note          String?   // 備考
   
   user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, date])
-}
-
-// Enums
-enum Role {
-  STUDENT
-  TEACHER
-  ADMIN
-}
-
-enum RoomType {
-  PUBLIC
-  PRIVATE
-  LESSON
-  EVENT
-}
-
-enum RoomRole {
-  OWNER
-  MODERATOR
-  MEMBER
-}
-
-enum MessageType {
-  TEXT
-  SYSTEM
-  ANNOUNCEMENT
-}
-
-enum AttendanceStatus {
-  PRESENT
-  ABSENT
-  LATE
-  EXCUSED
-  HOLIDAY
 }

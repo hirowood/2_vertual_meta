@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { authService } from '@services/auth.service';
-import { AuthRequest } from '@types/auth.types';
+import { AuthRequest } from '@/types/auth.types';
 import { sendSuccess, sendError } from '@utils/response.utils';
 import { asyncHandler } from '@middleware/error.middleware';
 

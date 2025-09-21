@@ -1,181 +1,203 @@
-# バーチャルスクールプラットフォーム（フロントエンド/バックエンド分離版）
+# バーチャルスクールプラットフォーム
 
 インクルーシブな仮想学習環境を提供するWebアプリケーション
 
-## 概要
+## 🚀 クイックスタート
 
-このプロジェクトは、様々な事情で外出が困難な方々が、まるで実際の学校にいるかのように学習や交流ができるプラットフォームです。
+### 自動セットアップ（Windows）
 
-## アーキテクチャ
+```batch
+# プロジェクトをダウンロード後、以下を実行
+setup.bat
+```
 
-- **フロントエンド**: Next.js 14 (ポート3000)
-- **バックエンド**: Express + TypeScript (ポート5000)
-- **リアルタイム通信**: Socket.io
-- **データベース**: SQLite（開発）/ PostgreSQL（本番）
+### 開発サーバーの起動
 
-## 機能（MVP）
+```batch
+# 両方のサーバーを同時に起動
+start-dev.bat
+```
 
-- ✅ ユーザー認証（JWT）
-- ✅ 2D空間でのキャラクター移動（Phaser.js）
-- ✅ リアルタイムチャット
-- ✅ ルーム機能
-- ✅ プロフィール管理
+または手動で：
 
-## 技術スタック
+```bash
+# Terminal 1 - バックエンド
+cd backend
+npm run dev
 
-### バックエンド (`/backend`)
-- Express.js + TypeScript
-- Prisma ORM
-- Socket.io
-- JWT認証
-- bcryptjs
+# Terminal 2 - フロントエンド
+cd frontend
+npm run dev
+```
 
-### フロントエンド (`/frontend`)
-- Next.js 14 + TypeScript
-- Phaser.js（ゲームエンジン）
-- Tailwind CSS + shadcn/ui
-- Zustand（状態管理）
-- Socket.io-client
-- Axios
+## 📁 プロジェクト構成
 
-## セットアップ
+```
+2_vertual_meta/
+├── backend/               # Express バックエンド
+│   ├── src/
+│   │   ├── config/       # 設定
+│   │   ├── controllers/  # コントローラー（HTTPリクエスト処理）
+│   │   ├── middleware/   # ミドルウェア
+│   │   ├── routes/       # APIルート
+│   │   ├── services/     # ビジネスロジック
+│   │   ├── socket/       # Socket.ioハンドラー
+│   │   ├── types/        # 型定義
+│   │   ├── utils/        # ユーティリティ
+│   │   ├── validators/   # バリデーション
+│   │   └── server.ts     # エントリーポイント
+│   └── prisma/
+│       └── schema.prisma # データベーススキーマ
+│
+├── frontend/             # Next.js フロントエンド
+│   └── src/
+│       ├── components/   # UIコンポーネント
+│       ├── hooks/        # カスタムフック
+│       ├── lib/          # ライブラリ設定
+│       ├── pages/        # ページコンポーネント
+│       ├── stores/       # 状態管理（Zustand）
+│       ├── styles/       # スタイル
+│       └── types/        # 型定義
+│
+├── setup.bat            # 自動セットアップスクリプト
+├── start-dev.bat        # 開発サーバー起動スクリプト
+└── README.md
+```
+
+## 🛠 技術スタック
+
+### バックエンド
+- **Express.js** - Webフレームワーク
+- **TypeScript** - 型安全な開発
+- **Prisma** - ORM
+- **Socket.io** - リアルタイム通信
+- **JWT** - 認証
+- **SQLite/PostgreSQL** - データベース
+
+### フロントエンド
+- **Next.js 14** - Reactフレームワーク
+- **TypeScript** - 型安全な開発
+- **Phaser.js** - 2Dゲームエンジン
+- **Tailwind CSS** - スタイリング
+- **Zustand** - 状態管理
+- **Socket.io-client** - リアルタイム通信
+
+## ✨ 主要機能（MVP）
+
+- 🔐 **ユーザー認証** - JWT認証、ロールベースアクセス制御
+- 🎮 **2D空間移動** - Phaser.jsによるアバター移動
+- 💬 **リアルタイムチャット** - Socket.ioによる即時メッセージング
+- 🏫 **ルーム機能** - 公開/プライベートルームの作成・参加
+- 👤 **プロフィール管理** - ユーザー情報の編集
+
+## 🔧 手動セットアップ
+
+### 必要要件
+- Node.js 18.0以上
+- npm または yarn
 
 ### 1. リポジトリのクローン
-
 ```bash
 git clone [repository-url]
 cd 2_vertual_meta
 ```
 
-### 2. バックエンドのセットアップ
-
+### 2. バックエンドセットアップ
 ```bash
 cd backend
-
-# 依存関係のインストール
 npm install
-
-# 環境変数の設定（.envファイルを編集）
-# DATABASE_URL, JWT_SECRET等を設定
-
-# Prismaのセットアップ
-npx prisma generate
-npx prisma db push
-
-# 開発サーバーの起動
+npm run db:generate
+npm run db:push
 npm run dev
 ```
 
-バックエンドは http://localhost:5000 で起動します。
-
-### 3. フロントエンドのセットアップ
-
-新しいターミナルで：
-
+### 3. フロントエンドセットアップ
 ```bash
 cd frontend
-
-# 依存関係のインストール
 npm install
-
-# 開発サーバーの起動
 npm run dev
 ```
 
-フロントエンドは http://localhost:3000 で起動します。
+### 4. アクセス
+- フロントエンド: http://localhost:3000
+- バックエンドAPI: http://localhost:5000/api
 
-## API エンドポイント
+## 🔑 環境変数
 
-### 認証 (`/api/auth`)
-- `POST /register` - ユーザー登録
-- `POST /login` - ログイン
-- `GET /me` - 現在のユーザー情報取得
-- `PUT /change-password` - パスワード変更
-
-### ユーザー (`/api/users`)
-- `GET /` - ユーザー一覧取得
-- `PUT /profile` - プロフィール更新
-- `PUT /position` - 位置情報更新
-- `GET /positions` - オンラインユーザーの位置取得
-
-### チャット (`/api/chat`)
-- `GET /messages` - メッセージ取得
-- `POST /messages` - メッセージ送信
-- `DELETE /messages/:id` - メッセージ削除
-
-### ルーム (`/api/rooms`)
-- `GET /` - ルーム一覧取得
-- `POST /` - ルーム作成（教師・管理者のみ）
-- `PUT /:id` - ルーム更新（教師・管理者のみ）
-- `DELETE /:id` - ルーム削除（管理者のみ）
-
-## Socket.io イベント
-
-### クライアント → サーバー
-- `user:join` - ユーザー参加
-- `user:move` - 位置移動
-- `chat:message` - メッセージ送信
-- `room:enter` - ルーム参加
-- `room:leave` - ルーム退出
-- `chat:typing` - タイピング通知
-
-### サーバー → クライアント
-- `user:joined` - 他ユーザーの参加通知
-- `user:moved` - 他ユーザーの移動通知
-- `user:left` - 他ユーザーの退出通知
-- `chat:message` - メッセージ受信
-- `chat:user_typing` - タイピング通知
-- `users:online` - オンラインユーザー一覧
-
-## プロジェクト構成
-
-```
-2_vertual_meta/
-├── backend/               # Expressバックエンド
-│   ├── src/
-│   │   ├── config/       # 設定
-│   │   ├── controllers/  # コントローラー
-│   │   ├── middleware/   # ミドルウェア
-│   │   ├── routes/       # ルート定義
-│   │   ├── socket/       # Socket.ioハンドラー
-│   │   ├── types/        # 型定義
-│   │   └── server.ts     # エントリーポイント
-│   ├── prisma/           # Prismaスキーマ
-│   └── package.json
-│
-├── frontend/             # Next.jsフロントエンド
-│   ├── src/
-│   │   ├── components/   # UIコンポーネント
-│   │   ├── contexts/     # Reactコンテキスト
-│   │   ├── hooks/        # カスタムフック
-│   │   ├── lib/          # ユーティリティ
-│   │   ├── pages/        # ページコンポーネント
-│   │   ├── stores/       # Zustandストア
-│   │   ├── styles/       # スタイル
-│   │   └── types/        # 型定義
-│   └── package.json
-│
-└── README.md
+### バックエンド（`backend/.env`）
+```env
+PORT=5000
+DATABASE_URL="file:./dev.db"
+JWT_SECRET=your-jwt-secret-change-in-production
+JWT_EXPIRE=7d
+FRONTEND_URL=http://localhost:3000
 ```
 
-## 本番環境へのデプロイ
+### フロントエンド（`frontend/.env.local`）
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
+NEXT_PUBLIC_SOCKET_URL=http://localhost:5000
+```
 
-### バックエンド
-1. PostgreSQLデータベースをセットアップ
-2. 環境変数を本番用に設定
-3. `npm run build`でビルド
-4. `npm start`で起動
+## 📚 API ドキュメント
 
-### フロントエンド
-1. 環境変数を本番用に設定
-2. `npm run build`でビルド
-3. `npm start`で起動
-4. または、Vercelにデプロイ
+### 認証
+- `POST /api/auth/register` - ユーザー登録
+- `POST /api/auth/login` - ログイン
+- `POST /api/auth/logout` - ログアウト
 
-## ライセンス
+### ユーザー
+- `GET /api/users` - ユーザー一覧
+- `PUT /api/users/profile` - プロフィール更新
+- `PUT /api/users/position` - 位置情報更新
 
-MIT
+### ルーム
+- `GET /api/rooms` - ルーム一覧
+- `POST /api/rooms` - ルーム作成
+- `POST /api/rooms/:id/join` - ルーム参加
 
-## 貢献
+## 🎯 今後の実装予定
 
-プルリクエストを歓迎します。大きな変更の場合は、まずissueを開いて変更内容を議論してください。
+### Phase 1
+- [ ] 近接音声通話（WebRTC）
+- [ ] 日報・体調記録
+- [ ] 出席管理システム
+
+### Phase 2
+- [ ] 学習支援機能
+- [ ] イベントシステム
+- [ ] ゲーミフィケーション要素
+
+## 📝 ライセンス
+
+MIT License
+
+## 🤝 貢献
+
+プルリクエストを歓迎します。大きな変更の場合は、まずissueを開いて議論してください。
+
+## 🐛 トラブルシューティング
+
+### npm installでエラーが出る場合
+```bash
+# キャッシュをクリア
+npm cache clean --force
+# 再インストール
+npm install
+```
+
+### データベースエラーが出る場合
+```bash
+cd backend
+# データベースをリセット
+rm prisma/dev.db
+npm run db:push
+```
+
+### ポートが既に使用されている場合
+- バックエンドポート（5000）を変更: `backend/.env`のPORTを編集
+- フロントエンドポート（3000）を変更: `frontend/package.json`のdevスクリプトを編集
+
+## 📞 サポート
+
+問題が発生した場合は、GitHubのIssuesで報告してください。

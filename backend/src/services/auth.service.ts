@@ -5,11 +5,12 @@ import { CreateUserDto, JwtPayload } from '@/types';
 import { AppError } from '@middleware/error.middleware';
 import logger from '@config/logger';
 import config from '@config/config';
+import { Role } from '@/constants/enums';
 
 export class AuthService {
   // ユーザー登録
   async register(data: CreateUserDto) {
-    const { email, password, name, role = 'STUDENT' } = data;
+    const { email, password, name, role = Role.STUDENT } = data;
 
     // メールアドレスの重複チェック
     const existingUser = await prisma.user.findUnique({
@@ -30,7 +31,7 @@ export class AuthService {
           email,
           password: hashedPassword,
           name,
-          role: role as any,
+          role: role,
           profile: {
             create: {},
           },

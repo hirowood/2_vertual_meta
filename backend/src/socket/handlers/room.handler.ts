@@ -6,7 +6,7 @@ import {
   ServerToClientEvents,
   InterServerEvents,
   SocketData,
-} from '@types/socket.types';
+} from '@/types/socket.types';
 
 export const roomHandler = (
   io: Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>,

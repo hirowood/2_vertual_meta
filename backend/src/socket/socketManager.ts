@@ -7,7 +7,7 @@ import {
   InterServerEvents,
   SocketData,
   SocketUser,
-} from '@types/socket.types';
+} from '@/types/socket.types';
 import { chatHandler } from './handlers/chat.handler';
 import { positionHandler } from './handlers/position.handler';
 import { roomHandler } from './handlers/room.handler';

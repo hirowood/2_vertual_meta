@@ -17,7 +17,7 @@ import {
   ServerToClientEvents,
   InterServerEvents,
   SocketData,
-} from '@types/socket.types';
+} from '@/types/socket.types';
 
 // Expressアプリの初期化
 const app: Application = express();

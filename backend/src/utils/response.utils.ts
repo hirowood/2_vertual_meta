@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { ApiResponse } from '@types/auth.types';
+import { ApiResponse } from '@/types/auth.types';
 
 // 成功レスポンス
 export const sendSuccess = <T = any>(

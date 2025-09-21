@@ -1,5 +1,5 @@
 import { Response, NextFunction } from 'express';
-import { AuthRequest, AuthUser } from '@types/auth.types';
+import { AuthRequest, AuthUser } from '@/types/auth.types';
 import { verifyAccessToken } from '@utils/auth.utils';
 import { sendError } from '@utils/response.utils';
 import prisma from '@config/database';

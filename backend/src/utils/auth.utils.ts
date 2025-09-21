@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import config from '@config/config';
-import { JwtPayload, RefreshTokenPayload } from '@types/auth.types';
+import { JwtPayload, RefreshTokenPayload } from '@/types/auth.types';
 
 // パスワードのハッシュ化
 export const hashPassword = async (password: string): Promise<string> => {
