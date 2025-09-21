@@ -6,6 +6,7 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
+    "useUnknownInCatchVariables": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
@@ -28,7 +29,8 @@
       "@utils/*": ["src/utils/*"],
       "@validators/*": ["src/validators/*"],
       "@types/*": ["src/types/*"],
-      "@socket/*": ["src/socket/*"]
+      "@socket/*": ["src/socket/*"],
+      "@constants/*": ["src/constants/*"]
     }
   },
   "include": ["src/**/*"],

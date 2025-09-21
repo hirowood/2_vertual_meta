@@ -55,3 +55,18 @@ export interface UpdateProfileDto {
   grade?: string;
   subjects?: string;
 }
+
+// エラー型定義
+export interface ErrorWithName extends Error {
+  name: string;
+}
+
+export interface JwtError extends ErrorWithName {
+  name: 'JsonWebTokenError' | 'TokenExpiredError' | 'NotBeforeError';
+}
+
+export interface PrismaError extends Error {
+  code?: string;
+  meta?: Record<string, any>;
+  clientVersion?: string;
+}

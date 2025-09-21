@@ -57,15 +57,16 @@ export const authenticate = async (
     } as AuthUser;
 
     next();
-  } catch (error) {
+  } catch (error: any) {
     logger.error('Authentication error:', error);
     
-    if (error.name === 'JsonWebTokenError') {
+    // エラーの型チェックとハンドリング
+    if (error?.name === 'JsonWebTokenError') {
       sendError(res, '無効なトークンです', 401);
       return;
     }
     
-    if (error.name === 'TokenExpiredError') {
+    if (error?.name === 'TokenExpiredError') {
       sendError(res, 'トークンの有効期限が切れています', 401);
       return;
     }
@@ -115,6 +116,7 @@ export const optionalAuth = async (
     next();
   } catch (error) {
     // トークンが無効でも続行
+    logger.debug('Optional auth error (continuing):', error);
     next();
   }
 };

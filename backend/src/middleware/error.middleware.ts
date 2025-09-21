@@ -16,6 +16,16 @@ export class AppError extends Error {
   }
 }
 
+// エラー型ガード
+function isAppError(error: unknown): error is AppError {
+  return error instanceof AppError;
+}
+
+// Prismaエラー型ガード
+function isPrismaError(error: any): boolean {
+  return error?.constructor?.name === 'PrismaClientKnownRequestError';
+}
+
 // 404エラーハンドラー
 export const notFound = (req: Request, res: Response, next: NextFunction): void => {
   const error = new AppError(`エンドポイントが見つかりません: ${req.originalUrl}`, 404);
@@ -24,7 +34,7 @@ export const notFound = (req: Request, res: Response, next: NextFunction): void 
 
 // グローバルエラーハンドラー
 export const errorHandler = (
-  err: Error | AppError,
+  err: unknown,
   req: Request,
   res: Response,
   next: NextFunction
@@ -33,32 +43,34 @@ export const errorHandler = (
   let message = 'サーバーエラーが発生しました';
   let isOperational = false;
 
-  // AppErrorの場合
-  if (err instanceof AppError) {
+  // エラーの型チェックと処理
+  if (isAppError(err)) {
     statusCode = err.statusCode;
     message = err.message;
     isOperational = err.isOperational;
-  }
-
-  // Prismaエラーの処理
-  if (err.constructor.name === 'PrismaClientKnownRequestError') {
-    const prismaError = err as any;
+  } else if (err instanceof Error) {
+    message = err.message;
     
-    switch (prismaError.code) {
-      case 'P2002':
-        statusCode = 400;
-        message = '既に登録されているデータです';
-        break;
-      case 'P2025':
-        statusCode = 404;
-        message = 'データが見つかりません';
-        break;
-      default:
-        statusCode = 400;
-        message = 'データベースエラーが発生しました';
+    // Prismaエラーの処理
+    if (isPrismaError(err)) {
+      const prismaError = err as any;
+      
+      switch (prismaError.code) {
+        case 'P2002':
+          statusCode = 400;
+          message = '既に登録されているデータです';
+          break;
+        case 'P2025':
+          statusCode = 404;
+          message = 'データが見つかりません';
+          break;
+        default:
+          statusCode = 400;
+          message = 'データベースエラーが発生しました';
+      }
+      
+      isOperational = true;
     }
-    
-    isOperational = true;
   }
 
   // ログ出力
@@ -74,16 +86,7 @@ export const errorHandler = (
     });
   }
 
-  // 開発環境ではスタックトレースを含める
-  const response = {
-    success: false,
-    error: message,
-    ...(process.env.NODE_ENV === 'development' && {
-      stack: err.stack,
-      details: err,
-    }),
-  };
-
+  // レスポンス送信
   sendError(res, message, statusCode);
 };
 
